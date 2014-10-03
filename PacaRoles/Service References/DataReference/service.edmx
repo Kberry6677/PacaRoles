@@ -1,0 +1,1057 @@
+﻿<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx">
+  <edmx:DataServices m:DataServiceVersion="3.0" m:MaxDataServiceVersion="3.0" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
+    <Schema Namespace="IdentityItem" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <EntityType Name="IdentityBase" Abstract="true">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.String" Nullable="false" />
+        <Property Name="DisplayName" Type="Edm.String" />
+        <Property Name="ParentId" Type="Edm.String" />
+        <Property Name="ParentNodeType" Type="Edm.String" />
+        <Property Name="Tag" Type="Edm.String" />
+        <Property Name="Name" Type="Edm.String" />
+        <Property Name="Created" Type="Edm.DateTime" Nullable="false" />
+        <Property Name="Modified" Type="Edm.DateTime" Nullable="false" />
+      </EntityType>
+      <EntityType Name="Account" BaseType="IdentityItem.IdentityBase">
+        <Property Name="Domain" Type="Edm.String" />
+        <Property Name="Alias" Type="Edm.String" />
+        <Property Name="Sid" Type="Edm.String" />
+        <Property Name="Status" Type="Edm.String" />
+        <Property Name="AccountType" Type="Edm.String" />
+        <NavigationProperty Name="BelongsToUsers" Relationship="IdentityItem.Account_BelongsToUsers" ToRole="BelongsToUsers" FromRole="Account" />
+        <NavigationProperty Name="BelongsToServiceUsers" Relationship="IdentityItem.Account_BelongsToServiceUsers" ToRole="BelongsToServiceUsers" FromRole="Account" />
+      </EntityType>
+      <EntityType Name="BusinessRole" BaseType="IdentityItem.IdentityBase">
+        <Property Name="BoundaryType" Type="Edm.String" />
+        <Property Name="IsRequired" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="Description" Type="Edm.String" />
+        <Property Name="Status" Type="Edm.String" />
+        <Property Name="ManagementMode" Type="Edm.String" />
+        <NavigationProperty Name="TeamsInBusinessRole" Relationship="IdentityItem.BusinessRole_TeamsInBusinessRole" ToRole="TeamsInBusinessRole" FromRole="BusinessRole" />
+        <NavigationProperty Name="SuggestedDelegates" Relationship="IdentityItem.BusinessRole_SuggestedDelegates" ToRole="SuggestedDelegates" FromRole="BusinessRole" />
+        <NavigationProperty Name="BoundaryHierarchies" Relationship="IdentityItem.BusinessRole_BoundaryHierarchies" ToRole="BoundaryHierarchies" FromRole="BusinessRole" />
+        <NavigationProperty Name="ServiceRoles" Relationship="IdentityItem.BusinessRole_ServiceRoles" ToRole="ServiceRoles" FromRole="BusinessRole" />
+      </EntityType>
+      <EntityType Name="CommunicationMethod" BaseType="IdentityItem.IdentityBase">
+        <Property Name="CommunicationType" Type="Edm.String" />
+        <Property Name="Value" Type="Edm.String" />
+        <Property Name="IsExternallyMastered" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="Notes" Type="Edm.String" />
+        <Property Name="Priority" Type="Edm.Int32" Nullable="false" />
+        <NavigationProperty Name="EscalationPaths" Relationship="IdentityItem.CommunicationMethod_EscalationPaths" ToRole="EscalationPaths" FromRole="CommunicationMethod" />
+        <NavigationProperty Name="User" Relationship="IdentityItem.CommunicationMethod_User" ToRole="User" FromRole="CommunicationMethod" />
+        <NavigationProperty Name="Team" Relationship="IdentityItem.CommunicationMethod_Team" ToRole="Team" FromRole="CommunicationMethod" />
+      </EntityType>
+      <EntityType Name="EscalationPath" BaseType="IdentityItem.IdentityBase">
+        <Property Name="Priority" Type="Edm.Int32" Nullable="false" />
+        <NavigationProperty Name="CommunicationMethod" Relationship="IdentityItem.EscalationPath_CommunicationMethod" ToRole="CommunicationMethod" FromRole="EscalationPath" />
+        <NavigationProperty Name="EscalationSchedule" Relationship="IdentityItem.EscalationPath_EscalationSchedule" ToRole="EscalationSchedule" FromRole="EscalationPath" />
+      </EntityType>
+      <EntityType Name="EscalationSchedule" BaseType="IdentityItem.IdentityBase">
+        <Property Name="Status" Type="Edm.String" />
+        <Property Name="Start" Type="Edm.DateTime" Nullable="false" />
+        <Property Name="End" Type="Edm.DateTime" Nullable="false" />
+        <Property Name="Duration" Type="Edm.Int32" Nullable="false" />
+        <Property Name="DurationUnit" Type="Edm.String" />
+        <Property Name="FrequencyUnit" Type="Edm.String" />
+        <Property Name="FrequencyCycle" Type="Edm.Int32" Nullable="false" />
+        <Property Name="IsRecurringWeeklyOnSunday" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="IsRecurringWeeklyOnMonday" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="IsRecurringWeeklyOnTuesday" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="IsRecurringWeeklyOnWednesday" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="IsRecurringWeeklyOnThursday" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="IsRecurringWeeklyOnFriday" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="IsRecurringWeeklyOnSaturday" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="Notes" Type="Edm.String" />
+        <NavigationProperty Name="EscalationPaths" Relationship="IdentityItem.EscalationSchedule_EscalationPaths" ToRole="EscalationPaths" FromRole="EscalationSchedule" />
+        <NavigationProperty Name="Team" Relationship="IdentityItem.EscalationSchedule_Team" ToRole="Team" FromRole="EscalationSchedule" />
+      </EntityType>
+      <EntityType Name="Identity" BaseType="IdentityItem.IdentityBase" Abstract="true">
+        <Property Name="Description" Type="Edm.String" />
+        <Property Name="Status" Type="Edm.String" />
+        <Property Name="LegacyId" Type="Edm.Int32" Nullable="false" />
+      </EntityType>
+      <EntityType Name="Team" BaseType="IdentityItem.Identity">
+        <Property Name="BoundaryNodeType" Type="Edm.String" />
+        <Property Name="BoundaryNode" Type="IdentityItem.ExternalReference" />
+        <Property Name="IsDelegated" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="IsAnyRoleAssigned" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="Alias" Type="Edm.String" />
+        <Property Name="Category" Type="Edm.String" />
+        <Property Name="BoundaryNodeId" Type="Edm.String" />
+        <Property Name="RelativePath" Type="Edm.String" />
+        <NavigationProperty Name="MemberOf" Relationship="IdentityItem.Team_MemberOf" ToRole="MemberOf" FromRole="Team" />
+        <NavigationProperty Name="UserOwners" Relationship="IdentityItem.Team_UserOwners" ToRole="UserOwners" FromRole="Team" />
+        <NavigationProperty Name="ServiceUserOwners" Relationship="IdentityItem.Team_ServiceUserOwners" ToRole="ServiceUserOwners" FromRole="Team" />
+        <NavigationProperty Name="MemberUsers" Relationship="IdentityItem.Team_MemberUsers" ToRole="MemberUsers" FromRole="Team" />
+        <NavigationProperty Name="MemberServiceUsers" Relationship="IdentityItem.Team_MemberServiceUsers" ToRole="MemberServiceUsers" FromRole="Team" />
+        <NavigationProperty Name="MemberTeams" Relationship="IdentityItem.Team_MemberTeams" ToRole="MemberTeams" FromRole="Team" />
+        <NavigationProperty Name="Children" Relationship="IdentityItem.Team_Children" ToRole="Children" FromRole="Team" />
+        <NavigationProperty Name="BusinessRole" Relationship="IdentityItem.Team_BusinessRole" ToRole="BusinessRole" FromRole="Team" />
+        <NavigationProperty Name="RoleAssignments" Relationship="IdentityItem.Team_RoleAssignments" ToRole="RoleAssignments" FromRole="Team" />
+        <NavigationProperty Name="SuggestedDelegateFor" Relationship="IdentityItem.Team_SuggestedDelegateFor" ToRole="SuggestedDelegateFor" FromRole="Team" />
+        <NavigationProperty Name="EscalationSchedules" Relationship="IdentityItem.Team_EscalationSchedules" ToRole="EscalationSchedules" FromRole="Team" />
+        <NavigationProperty Name="CommunicationMethods" Relationship="IdentityItem.Team_CommunicationMethods" ToRole="CommunicationMethods" FromRole="Team" />
+        <NavigationProperty Name="Parent" Relationship="IdentityItem.Team_Parent" ToRole="Parent" FromRole="Team" />
+        <NavigationProperty Name="PrimaryForUsers" Relationship="IdentityItem.Team_PrimaryForUsers" ToRole="PrimaryForUsers" FromRole="Team" />
+      </EntityType>
+      <EntityType Name="Principal" BaseType="IdentityItem.Identity" Abstract="true" />
+      <EntityType Name="User" BaseType="IdentityItem.Principal">
+        <Property Name="FirstName" Type="Edm.String" />
+        <Property Name="MiddleName" Type="Edm.String" />
+        <Property Name="LastName" Type="Edm.String" />
+        <Property Name="Company" Type="Edm.String" />
+        <Property Name="Country" Type="Edm.String" />
+        <Property Name="City" Type="Edm.String" />
+        <Property Name="State" Type="Edm.String" />
+        <Property Name="Department" Type="Edm.String" />
+        <Property Name="Office" Type="Edm.String" />
+        <Property Name="Title" Type="Edm.String" />
+        <Property Name="Manager" Type="Edm.String" />
+        <Property Name="EmploymentStatus" Type="Edm.String" />
+        <Property Name="SourceSystem" Type="Edm.String" />
+        <Property Name="CorpAlias" Type="Edm.String" />
+        <NavigationProperty Name="MemberOf" Relationship="IdentityItem.User_MemberOf" ToRole="MemberOf" FromRole="User" />
+        <NavigationProperty Name="UserOwners" Relationship="IdentityItem.User_UserOwners" ToRole="UserOwners" FromRole="User" />
+        <NavigationProperty Name="ServiceUserOwners" Relationship="IdentityItem.User_ServiceUserOwners" ToRole="ServiceUserOwners" FromRole="User" />
+        <NavigationProperty Name="Accounts" Relationship="IdentityItem.User_Accounts" ToRole="Accounts" FromRole="User" />
+        <NavigationProperty Name="OwnedUsers" Relationship="IdentityItem.User_OwnedUsers" ToRole="OwnedUsers" FromRole="User" />
+        <NavigationProperty Name="OwnedServiceUsers" Relationship="IdentityItem.User_OwnedServiceUsers" ToRole="OwnedServiceUsers" FromRole="User" />
+        <NavigationProperty Name="OwnedTeams" Relationship="IdentityItem.User_OwnedTeams" ToRole="OwnedTeams" FromRole="User" />
+        <NavigationProperty Name="CommunicationMethods" Relationship="IdentityItem.User_CommunicationMethods" ToRole="CommunicationMethods" FromRole="User" />
+        <NavigationProperty Name="PrimaryTeam" Relationship="IdentityItem.User_PrimaryTeam" ToRole="PrimaryTeam" FromRole="User" />
+      </EntityType>
+      <EntityType Name="ServiceUser" BaseType="IdentityItem.Principal">
+        <NavigationProperty Name="MemberOf" Relationship="IdentityItem.ServiceUser_MemberOf" ToRole="MemberOf" FromRole="ServiceUser" />
+        <NavigationProperty Name="UserOwners" Relationship="IdentityItem.ServiceUser_UserOwners" ToRole="UserOwners" FromRole="ServiceUser" />
+        <NavigationProperty Name="ServiceUserOwners" Relationship="IdentityItem.ServiceUser_ServiceUserOwners" ToRole="ServiceUserOwners" FromRole="ServiceUser" />
+        <NavigationProperty Name="Accounts" Relationship="IdentityItem.ServiceUser_Accounts" ToRole="Accounts" FromRole="ServiceUser" />
+        <NavigationProperty Name="OwnedUsers" Relationship="IdentityItem.ServiceUser_OwnedUsers" ToRole="OwnedUsers" FromRole="ServiceUser" />
+        <NavigationProperty Name="OwnedServiceUsers" Relationship="IdentityItem.ServiceUser_OwnedServiceUsers" ToRole="OwnedServiceUsers" FromRole="ServiceUser" />
+        <NavigationProperty Name="OwnedTeams" Relationship="IdentityItem.ServiceUser_OwnedTeams" ToRole="OwnedTeams" FromRole="ServiceUser" />
+        <NavigationProperty Name="ServiceRoles" Relationship="IdentityItem.ServiceUser_ServiceRoles" ToRole="ServiceRoles" FromRole="ServiceUser" />
+        <NavigationProperty Name="BoundaryHierarchies" Relationship="IdentityItem.ServiceUser_BoundaryHierarchies" ToRole="BoundaryHierarchies" FromRole="ServiceUser" />
+      </EntityType>
+      <EntityType Name="RoleAssignment" BaseType="IdentityItem.IdentityBase">
+        <Property Name="ServiceName" Type="Edm.String" />
+        <Property Name="BoundaryNodes" Type="Collection(IdentityItem.ExternalReference)" Nullable="false" />
+        <Property Name="Status" Type="Edm.String" />
+        <NavigationProperty Name="ServiceRole" Relationship="IdentityItem.RoleAssignment_ServiceRole" ToRole="ServiceRole" FromRole="RoleAssignment" />
+        <NavigationProperty Name="Team" Relationship="IdentityItem.RoleAssignment_Team" ToRole="Team" FromRole="RoleAssignment" />
+      </EntityType>
+      <EntityType Name="ServiceRoleDefinition" BaseType="IdentityItem.IdentityBase">
+        <Property Name="Description" Type="Edm.String" />
+        <Property Name="CanMappedToStandardBusinessRole" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="CustomTeamScope" Type="Edm.String" />
+        <Property Name="ApprovalRequired" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="NotificationRequired" Type="Edm.Boolean" Nullable="false" />
+        <NavigationProperty Name="BoundaryHierarchies" Relationship="IdentityItem.ServiceRoleDefinition_BoundaryHierarchies" ToRole="BoundaryHierarchies" FromRole="ServiceRoleDefinition" />
+        <NavigationProperty Name="MappedTo" Relationship="IdentityItem.ServiceRoleDefinition_MappedTo" ToRole="MappedTo" FromRole="ServiceRoleDefinition" />
+        <NavigationProperty Name="RoleAssignments" Relationship="IdentityItem.ServiceRoleDefinition_RoleAssignments" ToRole="RoleAssignments" FromRole="ServiceRoleDefinition" />
+        <NavigationProperty Name="ServiceUser" Relationship="IdentityItem.ServiceRoleDefinition_ServiceUser" ToRole="ServiceUser" FromRole="ServiceRoleDefinition" />
+      </EntityType>
+      <EntityType Name="BoundaryHierarchy" BaseType="IdentityItem.IdentityBase">
+        <Property Name="Description" Type="Edm.String" />
+        <Property Name="BoundaryTypes" Type="Edm.String" />
+        <Property Name="BoundaryTypeAbbreviations" Type="Edm.String" />
+        <NavigationProperty Name="ServiceRoles" Relationship="IdentityItem.BoundaryHierarchy_ServiceRoles" ToRole="ServiceRoles" FromRole="BoundaryHierarchy" />
+        <NavigationProperty Name="BusinessRoles" Relationship="IdentityItem.BoundaryHierarchy_BusinessRoles" ToRole="BusinessRoles" FromRole="BoundaryHierarchy" />
+        <NavigationProperty Name="ServiceUser" Relationship="IdentityItem.BoundaryHierarchy_ServiceUser" ToRole="ServiceUser" FromRole="BoundaryHierarchy" />
+      </EntityType>
+      <ComplexType Name="ExternalReference">
+        <Property Name="Name" Type="Edm.String" />
+        <Property Name="ItemType" Type="Edm.String" />
+        <Property Name="Uri" Type="Edm.String" />
+      </ComplexType>
+      <ComplexType Name="AuthorizationRole">
+        <Property Name="Name" Type="Edm.String" />
+        <Property Name="BoundaryNodes" Type="Collection(IdentityItem.ExternalReference)" Nullable="false" />
+      </ComplexType>
+      <Association Name="Account_BelongsToUsers">
+        <End Type="IdentityItem.User" Role="BelongsToUsers" Multiplicity="*" />
+        <End Type="IdentityItem.Account" Role="Account" Multiplicity="*" />
+      </Association>
+      <Association Name="Account_BelongsToServiceUsers">
+        <End Type="IdentityItem.ServiceUser" Role="BelongsToServiceUsers" Multiplicity="*" />
+        <End Type="IdentityItem.Account" Role="Account" Multiplicity="*" />
+      </Association>
+      <Association Name="BusinessRole_TeamsInBusinessRole">
+        <End Type="IdentityItem.Team" Role="TeamsInBusinessRole" Multiplicity="*" />
+        <End Type="IdentityItem.BusinessRole" Role="BusinessRole" Multiplicity="*" />
+      </Association>
+      <Association Name="BusinessRole_SuggestedDelegates">
+        <End Type="IdentityItem.Team" Role="SuggestedDelegates" Multiplicity="*" />
+        <End Type="IdentityItem.BusinessRole" Role="BusinessRole" Multiplicity="*" />
+      </Association>
+      <Association Name="BusinessRole_BoundaryHierarchies">
+        <End Type="IdentityItem.BusinessRole" Role="BusinessRole" Multiplicity="*" />
+        <End Type="IdentityItem.BoundaryHierarchy" Role="BoundaryHierarchies" Multiplicity="*" />
+      </Association>
+      <Association Name="BusinessRole_ServiceRoles">
+        <End Type="IdentityItem.ServiceRoleDefinition" Role="ServiceRoles" Multiplicity="*" />
+        <End Type="IdentityItem.BusinessRole" Role="BusinessRole" Multiplicity="*" />
+      </Association>
+      <Association Name="CommunicationMethod_EscalationPaths">
+        <End Type="IdentityItem.EscalationPath" Role="EscalationPaths" Multiplicity="*" />
+        <End Type="IdentityItem.CommunicationMethod" Role="CommunicationMethod" Multiplicity="*" />
+      </Association>
+      <Association Name="CommunicationMethod_User">
+        <End Type="IdentityItem.User" Role="User" Multiplicity="0..1" />
+        <End Type="IdentityItem.CommunicationMethod" Role="CommunicationMethod" Multiplicity="*" />
+      </Association>
+      <Association Name="CommunicationMethod_Team">
+        <End Type="IdentityItem.Team" Role="Team" Multiplicity="0..1" />
+        <End Type="IdentityItem.CommunicationMethod" Role="CommunicationMethod" Multiplicity="*" />
+      </Association>
+      <Association Name="EscalationPath_CommunicationMethod">
+        <End Type="IdentityItem.EscalationPath" Role="EscalationPath" Multiplicity="*" />
+        <End Type="IdentityItem.CommunicationMethod" Role="CommunicationMethod" Multiplicity="0..1" />
+      </Association>
+      <Association Name="EscalationPath_EscalationSchedule">
+        <End Type="IdentityItem.EscalationSchedule" Role="EscalationSchedule" Multiplicity="0..1" />
+        <End Type="IdentityItem.EscalationPath" Role="EscalationPath" Multiplicity="*" />
+      </Association>
+      <Association Name="EscalationSchedule_EscalationPaths">
+        <End Type="IdentityItem.EscalationSchedule" Role="EscalationSchedule" Multiplicity="*" />
+        <End Type="IdentityItem.EscalationPath" Role="EscalationPaths" Multiplicity="*" />
+      </Association>
+      <Association Name="EscalationSchedule_Team">
+        <End Type="IdentityItem.Team" Role="Team" Multiplicity="0..1" />
+        <End Type="IdentityItem.EscalationSchedule" Role="EscalationSchedule" Multiplicity="*" />
+      </Association>
+      <Association Name="Team_MemberOf">
+        <End Type="IdentityItem.Team" Role="MemberOf" Multiplicity="*" />
+        <End Type="IdentityItem.Team" Role="Team" Multiplicity="*" />
+      </Association>
+      <Association Name="Team_UserOwners">
+        <End Type="IdentityItem.User" Role="UserOwners" Multiplicity="*" />
+        <End Type="IdentityItem.Team" Role="Team" Multiplicity="*" />
+      </Association>
+      <Association Name="Team_ServiceUserOwners">
+        <End Type="IdentityItem.Team" Role="Team" Multiplicity="*" />
+        <End Type="IdentityItem.ServiceUser" Role="ServiceUserOwners" Multiplicity="*" />
+      </Association>
+      <Association Name="Team_MemberUsers">
+        <End Type="IdentityItem.User" Role="MemberUsers" Multiplicity="*" />
+        <End Type="IdentityItem.Team" Role="Team" Multiplicity="*" />
+      </Association>
+      <Association Name="Team_MemberServiceUsers">
+        <End Type="IdentityItem.Team" Role="Team" Multiplicity="*" />
+        <End Type="IdentityItem.ServiceUser" Role="MemberServiceUsers" Multiplicity="*" />
+      </Association>
+      <Association Name="Team_MemberTeams">
+        <End Type="IdentityItem.Team" Role="MemberTeams" Multiplicity="*" />
+        <End Type="IdentityItem.Team" Role="Team" Multiplicity="*" />
+      </Association>
+      <Association Name="Team_Children">
+        <End Type="IdentityItem.Team" Role="Children" Multiplicity="*" />
+        <End Type="IdentityItem.Team" Role="Team" Multiplicity="*" />
+      </Association>
+      <Association Name="Team_BusinessRole">
+        <End Type="IdentityItem.Team" Role="Team" Multiplicity="*" />
+        <End Type="IdentityItem.BusinessRole" Role="BusinessRole" Multiplicity="0..1" />
+      </Association>
+      <Association Name="Team_RoleAssignments">
+        <End Type="IdentityItem.Team" Role="Team" Multiplicity="*" />
+        <End Type="IdentityItem.RoleAssignment" Role="RoleAssignments" Multiplicity="*" />
+      </Association>
+      <Association Name="Team_SuggestedDelegateFor">
+        <End Type="IdentityItem.Team" Role="Team" Multiplicity="*" />
+        <End Type="IdentityItem.BusinessRole" Role="SuggestedDelegateFor" Multiplicity="*" />
+      </Association>
+      <Association Name="Team_EscalationSchedules">
+        <End Type="IdentityItem.Team" Role="Team" Multiplicity="*" />
+        <End Type="IdentityItem.EscalationSchedule" Role="EscalationSchedules" Multiplicity="*" />
+      </Association>
+      <Association Name="Team_CommunicationMethods">
+        <End Type="IdentityItem.Team" Role="Team" Multiplicity="*" />
+        <End Type="IdentityItem.CommunicationMethod" Role="CommunicationMethods" Multiplicity="*" />
+      </Association>
+      <Association Name="Team_Parent">
+        <End Type="IdentityItem.Team" Role="Parent" Multiplicity="0..1" />
+        <End Type="IdentityItem.Team" Role="Team" Multiplicity="*" />
+      </Association>
+      <Association Name="Team_PrimaryForUsers">
+        <End Type="IdentityItem.User" Role="PrimaryForUsers" Multiplicity="*" />
+        <End Type="IdentityItem.Team" Role="Team" Multiplicity="*" />
+      </Association>
+      <Association Name="User_MemberOf">
+        <End Type="IdentityItem.User" Role="User" Multiplicity="*" />
+        <End Type="IdentityItem.Team" Role="MemberOf" Multiplicity="*" />
+      </Association>
+      <Association Name="User_UserOwners">
+        <End Type="IdentityItem.User" Role="UserOwners" Multiplicity="*" />
+        <End Type="IdentityItem.User" Role="User" Multiplicity="*" />
+      </Association>
+      <Association Name="User_ServiceUserOwners">
+        <End Type="IdentityItem.User" Role="User" Multiplicity="*" />
+        <End Type="IdentityItem.ServiceUser" Role="ServiceUserOwners" Multiplicity="*" />
+      </Association>
+      <Association Name="User_Accounts">
+        <End Type="IdentityItem.User" Role="User" Multiplicity="*" />
+        <End Type="IdentityItem.Account" Role="Accounts" Multiplicity="*" />
+      </Association>
+      <Association Name="User_OwnedUsers">
+        <End Type="IdentityItem.User" Role="OwnedUsers" Multiplicity="*" />
+        <End Type="IdentityItem.User" Role="User" Multiplicity="*" />
+      </Association>
+      <Association Name="User_OwnedServiceUsers">
+        <End Type="IdentityItem.User" Role="User" Multiplicity="*" />
+        <End Type="IdentityItem.ServiceUser" Role="OwnedServiceUsers" Multiplicity="*" />
+      </Association>
+      <Association Name="User_OwnedTeams">
+        <End Type="IdentityItem.User" Role="User" Multiplicity="*" />
+        <End Type="IdentityItem.Team" Role="OwnedTeams" Multiplicity="*" />
+      </Association>
+      <Association Name="User_CommunicationMethods">
+        <End Type="IdentityItem.User" Role="User" Multiplicity="*" />
+        <End Type="IdentityItem.CommunicationMethod" Role="CommunicationMethods" Multiplicity="*" />
+      </Association>
+      <Association Name="User_PrimaryTeam">
+        <End Type="IdentityItem.User" Role="User" Multiplicity="*" />
+        <End Type="IdentityItem.Team" Role="PrimaryTeam" Multiplicity="0..1" />
+      </Association>
+      <Association Name="ServiceUser_MemberOf">
+        <End Type="IdentityItem.Team" Role="MemberOf" Multiplicity="*" />
+        <End Type="IdentityItem.ServiceUser" Role="ServiceUser" Multiplicity="*" />
+      </Association>
+      <Association Name="ServiceUser_UserOwners">
+        <End Type="IdentityItem.User" Role="UserOwners" Multiplicity="*" />
+        <End Type="IdentityItem.ServiceUser" Role="ServiceUser" Multiplicity="*" />
+      </Association>
+      <Association Name="ServiceUser_ServiceUserOwners">
+        <End Type="IdentityItem.ServiceUser" Role="ServiceUserOwners" Multiplicity="*" />
+        <End Type="IdentityItem.ServiceUser" Role="ServiceUser" Multiplicity="*" />
+      </Association>
+      <Association Name="ServiceUser_Accounts">
+        <End Type="IdentityItem.ServiceUser" Role="ServiceUser" Multiplicity="*" />
+        <End Type="IdentityItem.Account" Role="Accounts" Multiplicity="*" />
+      </Association>
+      <Association Name="ServiceUser_OwnedUsers">
+        <End Type="IdentityItem.User" Role="OwnedUsers" Multiplicity="*" />
+        <End Type="IdentityItem.ServiceUser" Role="ServiceUser" Multiplicity="*" />
+      </Association>
+      <Association Name="ServiceUser_OwnedServiceUsers">
+        <End Type="IdentityItem.ServiceUser" Role="OwnedServiceUsers" Multiplicity="*" />
+        <End Type="IdentityItem.ServiceUser" Role="ServiceUser" Multiplicity="*" />
+      </Association>
+      <Association Name="ServiceUser_OwnedTeams">
+        <End Type="IdentityItem.Team" Role="OwnedTeams" Multiplicity="*" />
+        <End Type="IdentityItem.ServiceUser" Role="ServiceUser" Multiplicity="*" />
+      </Association>
+      <Association Name="ServiceUser_ServiceRoles">
+        <End Type="IdentityItem.ServiceUser" Role="ServiceUser" Multiplicity="*" />
+        <End Type="IdentityItem.ServiceRoleDefinition" Role="ServiceRoles" Multiplicity="*" />
+      </Association>
+      <Association Name="ServiceUser_BoundaryHierarchies">
+        <End Type="IdentityItem.ServiceUser" Role="ServiceUser" Multiplicity="*" />
+        <End Type="IdentityItem.BoundaryHierarchy" Role="BoundaryHierarchies" Multiplicity="*" />
+      </Association>
+      <Association Name="RoleAssignment_ServiceRole">
+        <End Type="IdentityItem.ServiceRoleDefinition" Role="ServiceRole" Multiplicity="0..1" />
+        <End Type="IdentityItem.RoleAssignment" Role="RoleAssignment" Multiplicity="*" />
+      </Association>
+      <Association Name="RoleAssignment_Team">
+        <End Type="IdentityItem.Team" Role="Team" Multiplicity="0..1" />
+        <End Type="IdentityItem.RoleAssignment" Role="RoleAssignment" Multiplicity="*" />
+      </Association>
+      <Association Name="ServiceRoleDefinition_BoundaryHierarchies">
+        <End Type="IdentityItem.ServiceRoleDefinition" Role="ServiceRoleDefinition" Multiplicity="*" />
+        <End Type="IdentityItem.BoundaryHierarchy" Role="BoundaryHierarchies" Multiplicity="*" />
+      </Association>
+      <Association Name="ServiceRoleDefinition_MappedTo">
+        <End Type="IdentityItem.ServiceRoleDefinition" Role="ServiceRoleDefinition" Multiplicity="*" />
+        <End Type="IdentityItem.BusinessRole" Role="MappedTo" Multiplicity="*" />
+      </Association>
+      <Association Name="ServiceRoleDefinition_RoleAssignments">
+        <End Type="IdentityItem.ServiceRoleDefinition" Role="ServiceRoleDefinition" Multiplicity="*" />
+        <End Type="IdentityItem.RoleAssignment" Role="RoleAssignments" Multiplicity="*" />
+      </Association>
+      <Association Name="ServiceRoleDefinition_ServiceUser">
+        <End Type="IdentityItem.ServiceUser" Role="ServiceUser" Multiplicity="0..1" />
+        <End Type="IdentityItem.ServiceRoleDefinition" Role="ServiceRoleDefinition" Multiplicity="*" />
+      </Association>
+      <Association Name="BoundaryHierarchy_ServiceRoles">
+        <End Type="IdentityItem.ServiceRoleDefinition" Role="ServiceRoles" Multiplicity="*" />
+        <End Type="IdentityItem.BoundaryHierarchy" Role="BoundaryHierarchy" Multiplicity="*" />
+      </Association>
+      <Association Name="BoundaryHierarchy_BusinessRoles">
+        <End Type="IdentityItem.BusinessRole" Role="BusinessRoles" Multiplicity="*" />
+        <End Type="IdentityItem.BoundaryHierarchy" Role="BoundaryHierarchy" Multiplicity="*" />
+      </Association>
+      <Association Name="BoundaryHierarchy_ServiceUser">
+        <End Type="IdentityItem.ServiceUser" Role="ServiceUser" Multiplicity="0..1" />
+        <End Type="IdentityItem.BoundaryHierarchy" Role="BoundaryHierarchy" Multiplicity="*" />
+      </Association>
+      <Annotations Target="Microsoft.Manageability.ContactManagement.Service.CAM.IdentityDataSource">
+        <ValueAnnotation Term="Org.OData.Publication.V1.DocumentationUrl" String="https://GFSTechCentral/" />
+        <ValueAnnotation Term="Org.OData.Publication.V1.PublisherName" String="msgpms@microsoft.com" />
+        <ValueAnnotation Term="Org.OData.Documentation.V1.Description" String="The Identity Management service exposes all Teams, Users, Services, and Role information via the Directory.svc endpoint." />
+      </Annotations>
+      <Annotations Target="IdentityItem.Account">
+        <ValueAnnotation Term="Org.OData.Documentation.V1.Description" String="Shadow account objects that may exist in other systems such as Active Directory.  These Accounts are linked/associated with Users and ServiceUsers to enable them to access software and hardware." />
+      </Annotations>
+      <Annotations Target="IdentityItem.BoundaryHierarchy">
+        <ValueAnnotation Term="Org.OData.Documentation.V1.Description" String="A listing of data hierarchies used by Identity to provide security scope/context.  The actual boundary hierarchy data is usually mastered in external systems, but mirrored in Identity.  An example of this is the Business Relationship Hierarchy (BRH) that provides security boundaries based on product development organizations." />
+      </Annotations>
+      <Annotations Target="IdentityItem.BusinessRole">
+        <ValueAnnotation Term="Org.OData.Documentation.V1.Description" String="Metadata describing a 'Standard' set of business roles.  Identity uses these standard business roles to systematically manage operational org structure as well as permissions." />
+      </Annotations>
+      <Annotations Target="IdentityItem.CommunicationMethod">
+        <ValueAnnotation Term="Org.OData.Documentation.V1.Description" String="A complete listing of all communication methods (phone numbers, email addresses, pagers, etc.) used by Users and Teams within Identity." />
+      </Annotations>
+      <Annotations Target="IdentityItem.EscalationPath">
+        <ValueAnnotation Term="Org.OData.Documentation.V1.Description" String="Ordered listings of communication methods that are associated to escalation schedules." />
+      </Annotations>
+      <Annotations Target="IdentityItem.EscalationSchedule">
+        <ValueAnnotation Term="Org.OData.Documentation.V1.Description" String="A complete set of all escalation schedules (default and custom) used by Teams in Identity when an incident must be escalated." />
+      </Annotations>
+      <Annotations Target="IdentityItem.RoleAssignment">
+        <ValueAnnotation Term="Org.OData.Documentation.V1.Description" String="Groupings of Service Role mappings assigned to Teams.  These are used to determine permissions granted to members of a Team." />
+      </Annotations>
+      <Annotations Target="IdentityItem.ServiceUser">
+        <ValueAnnotation Term="Org.OData.Documentation.V1.Description" String="Information about a logical service that have onboarded to MSIdentity.  The ServiceUser can be used by multiple instances of a given service as the principal identity for the service." />
+      </Annotations>
+      <Annotations Target="IdentityItem.Team">
+        <ValueAnnotation Term="Org.OData.Documentation.V1.Description" String="Logical groupings of Users and Service Users who function with a similar set of responsibilities.  Teams exist in hierarchies and can be used to designate security boundaries." />
+      </Annotations>
+      <Annotations Target="IdentityItem.User">
+        <ValueAnnotation Term="Org.OData.Documentation.V1.Description" String="Personal information regarding all MSDIAL users.  The User is a logical representation of a person and serves as the principal identity for the User." />
+      </Annotations>
+    </Schema>
+    <Schema Namespace="Microsoft.Manageability.ContactManagement.Service.CAM" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <ComplexType Name="BusinessRoleRequest">
+        <Property Name="BoundaryType" Type="Edm.String" />
+        <Property Name="IsRequired" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="Description" Type="Edm.String" />
+        <Property Name="Status" Type="Edm.String" />
+        <Property Name="ManagementMode" Type="Edm.String" />
+        <Property Name="Id" Type="Edm.String" />
+        <Property Name="DisplayName" Type="Edm.String" />
+        <Property Name="ParentId" Type="Edm.String" />
+        <Property Name="ParentNodeType" Type="Edm.String" />
+        <Property Name="Tag" Type="Edm.String" />
+        <Property Name="Name" Type="Edm.String" />
+      </ComplexType>
+      <ComplexType Name="NameValuePair">
+        <Property Name="Name" Type="Edm.String" />
+        <Property Name="Value" Type="Edm.String" />
+      </ComplexType>
+      <ComplexType Name="CommunicationMethodRequest">
+        <Property Name="CommunicationType" Type="Edm.String" />
+        <Property Name="Value" Type="Edm.String" />
+        <Property Name="IsExternallyMastered" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="Notes" Type="Edm.String" />
+        <Property Name="Priority" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Id" Type="Edm.String" />
+        <Property Name="DisplayName" Type="Edm.String" />
+        <Property Name="ParentId" Type="Edm.String" />
+        <Property Name="ParentNodeType" Type="Edm.String" />
+        <Property Name="Tag" Type="Edm.String" />
+        <Property Name="Name" Type="Edm.String" />
+      </ComplexType>
+      <ComplexType Name="EscalationPathRequest">
+        <Property Name="Priority" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Id" Type="Edm.String" />
+        <Property Name="DisplayName" Type="Edm.String" />
+        <Property Name="ParentId" Type="Edm.String" />
+        <Property Name="ParentNodeType" Type="Edm.String" />
+        <Property Name="Tag" Type="Edm.String" />
+        <Property Name="Name" Type="Edm.String" />
+        <Property Name="CommunicationMethodId" Type="Edm.String" />
+      </ComplexType>
+      <ComplexType Name="PriorityUpdateRequest">
+        <Property Name="Id" Type="Edm.String" />
+        <Property Name="Priority" Type="Edm.Int32" Nullable="false" />
+      </ComplexType>
+      <ComplexType Name="EscalationScheduleRequest">
+        <Property Name="Status" Type="Edm.String" />
+        <Property Name="Duration" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Start" Type="Edm.DateTime" Nullable="false" />
+        <Property Name="End" Type="Edm.DateTime" Nullable="false" />
+        <Property Name="DurationUnit" Type="Edm.String" />
+        <Property Name="FrequencyUnit" Type="Edm.String" />
+        <Property Name="FrequencyCycle" Type="Edm.Int32" Nullable="false" />
+        <Property Name="IsRecurringWeeklyOnSunday" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="IsRecurringWeeklyOnMonday" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="IsRecurringWeeklyOnTuesday" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="IsRecurringWeeklyOnWednesday" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="IsRecurringWeeklyOnThursday" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="IsRecurringWeeklyOnFriday" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="IsRecurringWeeklyOnSaturday" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="Notes" Type="Edm.String" />
+        <Property Name="Id" Type="Edm.String" />
+        <Property Name="DisplayName" Type="Edm.String" />
+        <Property Name="ParentId" Type="Edm.String" />
+        <Property Name="ParentNodeType" Type="Edm.String" />
+        <Property Name="Tag" Type="Edm.String" />
+        <Property Name="Name" Type="Edm.String" />
+      </ComplexType>
+      <ComplexType Name="RoleAssignmentRequest">
+        <Property Name="ServiceName" Type="Edm.String" />
+        <Property Name="Status" Type="Edm.String" />
+        <Property Name="Id" Type="Edm.String" />
+        <Property Name="DisplayName" Type="Edm.String" />
+        <Property Name="ParentId" Type="Edm.String" />
+        <Property Name="ParentNodeType" Type="Edm.String" />
+        <Property Name="Tag" Type="Edm.String" />
+        <Property Name="Name" Type="Edm.String" />
+      </ComplexType>
+      <ComplexType Name="ServiceRoleDefinitionRequest">
+        <Property Name="Description" Type="Edm.String" />
+        <Property Name="Id" Type="Edm.String" />
+        <Property Name="DisplayName" Type="Edm.String" />
+        <Property Name="ParentId" Type="Edm.String" />
+        <Property Name="ParentNodeType" Type="Edm.String" />
+        <Property Name="Tag" Type="Edm.String" />
+        <Property Name="Name" Type="Edm.String" />
+        <Property Name="CanMappedToStandardBusinessRole" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="CustomTeamScope" Type="Edm.String" />
+        <Property Name="ApprovalRequired" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="NotificationRequired" Type="Edm.Boolean" Nullable="false" />
+      </ComplexType>
+      <ComplexType Name="ServiceUserRequest">
+        <Property Name="Description" Type="Edm.String" />
+        <Property Name="Status" Type="Edm.String" />
+        <Property Name="LegacyId" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Id" Type="Edm.String" />
+        <Property Name="DisplayName" Type="Edm.String" />
+        <Property Name="ParentId" Type="Edm.String" />
+        <Property Name="ParentNodeType" Type="Edm.String" />
+        <Property Name="Tag" Type="Edm.String" />
+        <Property Name="Name" Type="Edm.String" />
+      </ComplexType>
+      <ComplexType Name="AccountRequest">
+        <Property Name="Domain" Type="Edm.String" />
+        <Property Name="Alias" Type="Edm.String" />
+        <Property Name="Sid" Type="Edm.String" />
+        <Property Name="Status" Type="Edm.String" />
+        <Property Name="AccountType" Type="Edm.String" />
+        <Property Name="Id" Type="Edm.String" />
+        <Property Name="DisplayName" Type="Edm.String" />
+        <Property Name="ParentId" Type="Edm.String" />
+        <Property Name="ParentNodeType" Type="Edm.String" />
+        <Property Name="Tag" Type="Edm.String" />
+        <Property Name="Name" Type="Edm.String" />
+      </ComplexType>
+      <ComplexType Name="TeamRequest">
+        <Property Name="BoundaryNodeType" Type="Edm.String" />
+        <Property Name="IsDelegated" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="IsAnyRoleAssigned" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="Alias" Type="Edm.String" />
+        <Property Name="Category" Type="Edm.String" />
+        <Property Name="BoundaryNodeId" Type="Edm.String" />
+        <Property Name="RelativePath" Type="Edm.String" />
+        <Property Name="Description" Type="Edm.String" />
+        <Property Name="Status" Type="Edm.String" />
+        <Property Name="LegacyId" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Id" Type="Edm.String" />
+        <Property Name="DisplayName" Type="Edm.String" />
+        <Property Name="ParentId" Type="Edm.String" />
+        <Property Name="ParentNodeType" Type="Edm.String" />
+        <Property Name="Tag" Type="Edm.String" />
+        <Property Name="Name" Type="Edm.String" />
+      </ComplexType>
+      <ComplexType Name="WorkflowResponse">
+        <Property Name="RequestId" Type="Edm.Int64" Nullable="false" />
+        <Property Name="RequestStatus" Type="Edm.String" />
+      </ComplexType>
+      <ComplexType Name="Membership">
+        <Property Name="Id" Type="Edm.Guid" />
+        <Property Name="Type" Type="Edm.String" />
+        <Property Name="Domain" Type="Edm.String" />
+        <Property Name="Alias" Type="Edm.String" />
+        <Property Name="Name" Type="Edm.String" />
+        <Property Name="IsChangeManager" Type="Edm.Boolean" />
+      </ComplexType>
+      <EntityContainer Name="IdentityDataSource" m:IsDefaultEntityContainer="true">
+        <EntitySet Name="Accounts" EntityType="IdentityItem.Account" />
+        <EntitySet Name="BusinessRoles" EntityType="IdentityItem.BusinessRole" />
+        <EntitySet Name="CommunicationMethods" EntityType="IdentityItem.CommunicationMethod" />
+        <EntitySet Name="EscalationPaths" EntityType="IdentityItem.EscalationPath" />
+        <EntitySet Name="EscalationSchedules" EntityType="IdentityItem.EscalationSchedule" />
+        <EntitySet Name="Teams" EntityType="IdentityItem.Team" />
+        <EntitySet Name="Users" EntityType="IdentityItem.User" />
+        <EntitySet Name="ServiceUsers" EntityType="IdentityItem.ServiceUser" />
+        <EntitySet Name="RoleAssignments" EntityType="IdentityItem.RoleAssignment" />
+        <EntitySet Name="ServiceRoles" EntityType="IdentityItem.ServiceRoleDefinition" />
+        <EntitySet Name="BoundaryHierarchies" EntityType="IdentityItem.BoundaryHierarchy" />
+        <FunctionImport Name="GetAuthorizationRoles" ReturnType="Collection(IdentityItem.AuthorizationRole)">
+          <Parameter Name="service" Type="Edm.String" />
+          <Parameter Name="account" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="GetActiveEscalationSchedule" ReturnType="IdentityItem.EscalationSchedule" EntitySet="EscalationSchedules">
+          <Parameter Name="teamId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="ApproveRequest" ReturnType="Edm.Int64">
+          <Parameter Name="requestId" Type="Edm.Int64" Nullable="false" />
+          <Parameter Name="reason" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="CancelRequest" ReturnType="Edm.Int64">
+          <Parameter Name="requestId" Type="Edm.Int64" Nullable="false" />
+          <Parameter Name="reason" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="RejectRequest" ReturnType="Edm.Int64">
+          <Parameter Name="requestId" Type="Edm.Int64" Nullable="false" />
+          <Parameter Name="reason" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="ResubmitRequest" ReturnType="Edm.Int64">
+          <Parameter Name="requestId" Type="Edm.Int64" Nullable="false" />
+          <Parameter Name="justification" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="ActivateBusinessRole" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="businessRoleId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="AddApprovedDelegate" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="delegateTeamId" Type="Edm.String" />
+          <Parameter Name="businessRoleId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="AddBusinessRole" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="businessRoleRequest" Type="Microsoft.Manageability.ContactManagement.Service.CAM.BusinessRoleRequest" />
+          <Parameter Name="boundaryHierarchyIds" Type="Collection(Edm.String)" Nullable="false" />
+        </FunctionImport>
+        <FunctionImport Name="AddServiceRoleMapping" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="serviceRoleDefId" Type="Edm.String" />
+          <Parameter Name="businessRoleId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="DeactivateBusinessRole" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="businessRoleId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="RemoveApprovedDelegate" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="delegateTeamId" Type="Edm.String" />
+          <Parameter Name="businessRoleId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="RemoveServiceRoleMapping" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="serviceRoleDefId" Type="Edm.String" />
+          <Parameter Name="businessRoleId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="RetireBusinessRole" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="businessRoleId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="UpdateBusinessRole" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="businessRoleId" Type="Edm.String" />
+          <Parameter Name="updatedProperties" Type="Collection(Microsoft.Manageability.ContactManagement.Service.CAM.NameValuePair)" Nullable="false" />
+        </FunctionImport>
+        <FunctionImport Name="AddCommunicationMethod" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="communicationMethodRequest" Type="Microsoft.Manageability.ContactManagement.Service.CAM.CommunicationMethodRequest" />
+        </FunctionImport>
+        <FunctionImport Name="AddTeamCommunicationMethod" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="communicationMethodRequest" Type="Microsoft.Manageability.ContactManagement.Service.CAM.CommunicationMethodRequest" />
+        </FunctionImport>
+        <FunctionImport Name="RemoveCommunicationMethod" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="communicationMethodId" Type="Edm.String" />
+          <Parameter Name="parentId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="UpdateCommunicationMethod" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="communicationMethodId" Type="Edm.String" />
+          <Parameter Name="updatedProperties" Type="Collection(Microsoft.Manageability.ContactManagement.Service.CAM.NameValuePair)" Nullable="false" />
+        </FunctionImport>
+        <FunctionImport Name="AddEscalationPath" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="escalationPathRequestList" Type="Collection(Microsoft.Manageability.ContactManagement.Service.CAM.EscalationPathRequest)" Nullable="false" />
+          <Parameter Name="escalationScheduleId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="DeleteEscalationPaths" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="escalationPathIdList" Type="Collection(Edm.String)" Nullable="false" />
+          <Parameter Name="escalationScheduleId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="UpdateEscalationPaths" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="escalationPathRequestList" Type="Collection(Microsoft.Manageability.ContactManagement.Service.CAM.PriorityUpdateRequest)" Nullable="false" />
+          <Parameter Name="escalationScheduleId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="UpdateEscalationPathLinks" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="oldCommunicationMethodId" Type="Edm.String" />
+          <Parameter Name="newCommunicationMethodId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="ActivateEscalationSchedule" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="escalationScheduleId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="AddEscalationSchedule" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="escalationScheduleRequest" Type="Microsoft.Manageability.ContactManagement.Service.CAM.EscalationScheduleRequest" />
+        </FunctionImport>
+        <FunctionImport Name="DeactivateEscalationSchedule" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="escalationScheduleId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="RetireEscalationSchedule" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="escalationScheduleId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="UpdateEscalationSchedule" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="escalationScheduleId" Type="Edm.String" />
+          <Parameter Name="updatedProperties" Type="Collection(Microsoft.Manageability.ContactManagement.Service.CAM.NameValuePair)" Nullable="false" />
+        </FunctionImport>
+        <FunctionImport Name="ActivateRoleAssignment" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="roleAssignmentId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="AddRoleAssignment" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="serviceRoleDefId" Type="Edm.String" />
+          <Parameter Name="roleAssignmentRequest" Type="Microsoft.Manageability.ContactManagement.Service.CAM.RoleAssignmentRequest" />
+          <Parameter Name="boundaryNodeList" Type="Collection(IdentityItem.ExternalReference)" Nullable="false" />
+        </FunctionImport>
+        <FunctionImport Name="AddRoleAssignmentInBulk" ReturnType="Collection(Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse)">
+          <Parameter Name="serviceRoleIdList" Type="Collection(Edm.String)" Nullable="false" />
+          <Parameter Name="roleAssignmentRequest" Type="Microsoft.Manageability.ContactManagement.Service.CAM.RoleAssignmentRequest" />
+          <Parameter Name="boundaryNodeList" Type="Collection(IdentityItem.ExternalReference)" Nullable="false" />
+        </FunctionImport>
+        <FunctionImport Name="DeactivateRoleAssignment" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="roleAssignmentId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="RetireRoleAssignment" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="roleAssignmentId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="ActivateServiceUser" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="serviceUserId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="AddServiceRole" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="serviceRoleDefinitionRequest" Type="Microsoft.Manageability.ContactManagement.Service.CAM.ServiceRoleDefinitionRequest" />
+          <Parameter Name="boundaryHierarchyIds" Type="Collection(Edm.String)" Nullable="false" />
+        </FunctionImport>
+        <FunctionImport Name="AddServiceUser" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="serviceUserRequest" Type="Microsoft.Manageability.ContactManagement.Service.CAM.ServiceUserRequest" />
+        </FunctionImport>
+        <FunctionImport Name="AddServiceUserOwner" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="ownerId" Type="Edm.String" />
+          <Parameter Name="serviceUserId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="DeactivateServiceUser" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="serviceUserId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="LinkAccountToServiceUser" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="accountRequest" Type="Microsoft.Manageability.ContactManagement.Service.CAM.AccountRequest" />
+          <Parameter Name="serviceUserId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="RemoveServiceRole" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="serviceRoleDefId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="RemoveServiceUserOwner" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="ownerId" Type="Edm.String" />
+          <Parameter Name="serviceUserId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="RetireServiceUser" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="serviceUserId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="UnlinkAccountFromServiceUser" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="accountId" Type="Edm.String" />
+          <Parameter Name="serviceUserId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="UpdateServiceUser" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="serviceUserId" Type="Edm.String" />
+          <Parameter Name="updatedProperties" Type="Collection(Microsoft.Manageability.ContactManagement.Service.CAM.NameValuePair)" Nullable="false" />
+        </FunctionImport>
+        <FunctionImport Name="ActivateTeam" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="teamId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="AddDelegate" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="delegateTeamId" Type="Edm.String" />
+          <Parameter Name="teamId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="AddTeam" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="teamRequest" Type="Microsoft.Manageability.ContactManagement.Service.CAM.TeamRequest" />
+        </FunctionImport>
+        <FunctionImport Name="AddTeamMember" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="memberId" Type="Edm.String" />
+          <Parameter Name="teamId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="AddTeamOwner" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="ownerId" Type="Edm.String" />
+          <Parameter Name="teamId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="DeactivateTeam" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="teamId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="MoveTeam" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="teamId" Type="Edm.String" />
+          <Parameter Name="newParentTeamId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="RemoveDelegate" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="delegateTeamId" Type="Edm.String" />
+          <Parameter Name="teamId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="RemoveTeamMember" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="memberId" Type="Edm.String" />
+          <Parameter Name="teamId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="RemoveTeamOwner" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="ownerId" Type="Edm.String" />
+          <Parameter Name="teamId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="RetireTeam" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="teamId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="UpdateTeam" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="teamId" Type="Edm.String" />
+          <Parameter Name="updatedProperties" Type="Collection(Microsoft.Manageability.ContactManagement.Service.CAM.NameValuePair)" Nullable="false" />
+        </FunctionImport>
+        <FunctionImport Name="ActivateUser" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="userId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="AddUserOwner" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="ownerId" Type="Edm.String" />
+          <Parameter Name="userId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="DeactivateUser" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="userId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="RemoveUserOwner" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="ownerId" Type="Edm.String" />
+          <Parameter Name="userId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="RetireUser" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="userId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="AddPrimaryTeam" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="teamId" Type="Edm.String" />
+          <Parameter Name="userId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="RemovePrimaryTeam" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="userId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="UpdateUser" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="userId" Type="Edm.String" />
+          <Parameter Name="updatedProperties" Type="Collection(Microsoft.Manageability.ContactManagement.Service.CAM.NameValuePair)" Nullable="false" />
+        </FunctionImport>
+        <FunctionImport Name="RegisterUser" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="alias" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="LinkAccountToUser" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="accountRequest" Type="Microsoft.Manageability.ContactManagement.Service.CAM.AccountRequest" />
+          <Parameter Name="userId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="UnlinkAccountFromUser" ReturnType="Microsoft.Manageability.ContactManagement.Service.CAM.WorkflowResponse">
+          <Parameter Name="accountId" Type="Edm.String" />
+          <Parameter Name="userId" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="GetSubtreeTeamMembership" ReturnType="Collection(Microsoft.Manageability.ContactManagement.Service.CAM.Membership)">
+          <Parameter Name="teamId" Type="Edm.String" />
+          <Parameter Name="childTeamName" Type="Edm.String" />
+        </FunctionImport>
+        <FunctionImport Name="GetTeams" ReturnType="Collection(Microsoft.Manageability.ContactManagement.Service.CAM.NameValuePair)">
+          <Parameter Name="filter" Type="Edm.String" />
+          <Parameter Name="expand" Type="Edm.String" />
+          <Parameter Name="searchBase" Type="Edm.String" />
+          <Parameter Name="orderBy" Type="Edm.String" />
+          <Parameter Name="isAscending" Type="Edm.Boolean" Nullable="false" />
+          <Parameter Name="hasMemberUsers" Type="Edm.Boolean" />
+          <Parameter Name="top" Type="Edm.Int32" Nullable="false" />
+          <Parameter Name="skip" Type="Edm.Int32" Nullable="false" />
+        </FunctionImport>
+        <AssociationSet Name="Account_BelongsToUsers" Association="IdentityItem.Account_BelongsToUsers">
+          <End Role="Account" EntitySet="Accounts" />
+          <End Role="BelongsToUsers" EntitySet="Users" />
+        </AssociationSet>
+        <AssociationSet Name="Account_BelongsToServiceUsers" Association="IdentityItem.Account_BelongsToServiceUsers">
+          <End Role="Account" EntitySet="Accounts" />
+          <End Role="BelongsToServiceUsers" EntitySet="ServiceUsers" />
+        </AssociationSet>
+        <AssociationSet Name="BusinessRole_TeamsInBusinessRole" Association="IdentityItem.BusinessRole_TeamsInBusinessRole">
+          <End Role="BusinessRole" EntitySet="BusinessRoles" />
+          <End Role="TeamsInBusinessRole" EntitySet="Teams" />
+        </AssociationSet>
+        <AssociationSet Name="BusinessRole_SuggestedDelegates" Association="IdentityItem.BusinessRole_SuggestedDelegates">
+          <End Role="BusinessRole" EntitySet="BusinessRoles" />
+          <End Role="SuggestedDelegates" EntitySet="Teams" />
+        </AssociationSet>
+        <AssociationSet Name="BusinessRole_BoundaryHierarchies" Association="IdentityItem.BusinessRole_BoundaryHierarchies">
+          <End Role="BusinessRole" EntitySet="BusinessRoles" />
+          <End Role="BoundaryHierarchies" EntitySet="BoundaryHierarchies" />
+        </AssociationSet>
+        <AssociationSet Name="BusinessRole_ServiceRoles" Association="IdentityItem.BusinessRole_ServiceRoles">
+          <End Role="BusinessRole" EntitySet="BusinessRoles" />
+          <End Role="ServiceRoles" EntitySet="ServiceRoles" />
+        </AssociationSet>
+        <AssociationSet Name="CommunicationMethod_EscalationPaths" Association="IdentityItem.CommunicationMethod_EscalationPaths">
+          <End Role="CommunicationMethod" EntitySet="CommunicationMethods" />
+          <End Role="EscalationPaths" EntitySet="EscalationPaths" />
+        </AssociationSet>
+        <AssociationSet Name="CommunicationMethod_User" Association="IdentityItem.CommunicationMethod_User">
+          <End Role="CommunicationMethod" EntitySet="CommunicationMethods" />
+          <End Role="User" EntitySet="Users" />
+        </AssociationSet>
+        <AssociationSet Name="CommunicationMethod_Team" Association="IdentityItem.CommunicationMethod_Team">
+          <End Role="CommunicationMethod" EntitySet="CommunicationMethods" />
+          <End Role="Team" EntitySet="Teams" />
+        </AssociationSet>
+        <AssociationSet Name="EscalationPath_CommunicationMethod" Association="IdentityItem.EscalationPath_CommunicationMethod">
+          <End Role="EscalationPath" EntitySet="EscalationPaths" />
+          <End Role="CommunicationMethod" EntitySet="CommunicationMethods" />
+        </AssociationSet>
+        <AssociationSet Name="EscalationPath_EscalationSchedule" Association="IdentityItem.EscalationPath_EscalationSchedule">
+          <End Role="EscalationPath" EntitySet="EscalationPaths" />
+          <End Role="EscalationSchedule" EntitySet="EscalationSchedules" />
+        </AssociationSet>
+        <AssociationSet Name="EscalationSchedule_EscalationPaths" Association="IdentityItem.EscalationSchedule_EscalationPaths">
+          <End Role="EscalationSchedule" EntitySet="EscalationSchedules" />
+          <End Role="EscalationPaths" EntitySet="EscalationPaths" />
+        </AssociationSet>
+        <AssociationSet Name="EscalationSchedule_Team" Association="IdentityItem.EscalationSchedule_Team">
+          <End Role="EscalationSchedule" EntitySet="EscalationSchedules" />
+          <End Role="Team" EntitySet="Teams" />
+        </AssociationSet>
+        <AssociationSet Name="Team_MemberOf" Association="IdentityItem.Team_MemberOf">
+          <End Role="Team" EntitySet="Teams" />
+          <End Role="MemberOf" EntitySet="Teams" />
+        </AssociationSet>
+        <AssociationSet Name="Team_UserOwners" Association="IdentityItem.Team_UserOwners">
+          <End Role="Team" EntitySet="Teams" />
+          <End Role="UserOwners" EntitySet="Users" />
+        </AssociationSet>
+        <AssociationSet Name="Team_ServiceUserOwners" Association="IdentityItem.Team_ServiceUserOwners">
+          <End Role="Team" EntitySet="Teams" />
+          <End Role="ServiceUserOwners" EntitySet="ServiceUsers" />
+        </AssociationSet>
+        <AssociationSet Name="Team_MemberUsers" Association="IdentityItem.Team_MemberUsers">
+          <End Role="Team" EntitySet="Teams" />
+          <End Role="MemberUsers" EntitySet="Users" />
+        </AssociationSet>
+        <AssociationSet Name="Team_MemberServiceUsers" Association="IdentityItem.Team_MemberServiceUsers">
+          <End Role="Team" EntitySet="Teams" />
+          <End Role="MemberServiceUsers" EntitySet="ServiceUsers" />
+        </AssociationSet>
+        <AssociationSet Name="Team_MemberTeams" Association="IdentityItem.Team_MemberTeams">
+          <End Role="Team" EntitySet="Teams" />
+          <End Role="MemberTeams" EntitySet="Teams" />
+        </AssociationSet>
+        <AssociationSet Name="Team_Children" Association="IdentityItem.Team_Children">
+          <End Role="Team" EntitySet="Teams" />
+          <End Role="Children" EntitySet="Teams" />
+        </AssociationSet>
+        <AssociationSet Name="Team_BusinessRole" Association="IdentityItem.Team_BusinessRole">
+          <End Role="Team" EntitySet="Teams" />
+          <End Role="BusinessRole" EntitySet="BusinessRoles" />
+        </AssociationSet>
+        <AssociationSet Name="Team_RoleAssignments" Association="IdentityItem.Team_RoleAssignments">
+          <End Role="Team" EntitySet="Teams" />
+          <End Role="RoleAssignments" EntitySet="RoleAssignments" />
+        </AssociationSet>
+        <AssociationSet Name="Team_SuggestedDelegateFor" Association="IdentityItem.Team_SuggestedDelegateFor">
+          <End Role="Team" EntitySet="Teams" />
+          <End Role="SuggestedDelegateFor" EntitySet="BusinessRoles" />
+        </AssociationSet>
+        <AssociationSet Name="Team_EscalationSchedules" Association="IdentityItem.Team_EscalationSchedules">
+          <End Role="Team" EntitySet="Teams" />
+          <End Role="EscalationSchedules" EntitySet="EscalationSchedules" />
+        </AssociationSet>
+        <AssociationSet Name="Team_CommunicationMethods" Association="IdentityItem.Team_CommunicationMethods">
+          <End Role="Team" EntitySet="Teams" />
+          <End Role="CommunicationMethods" EntitySet="CommunicationMethods" />
+        </AssociationSet>
+        <AssociationSet Name="Team_Parent" Association="IdentityItem.Team_Parent">
+          <End Role="Team" EntitySet="Teams" />
+          <End Role="Parent" EntitySet="Teams" />
+        </AssociationSet>
+        <AssociationSet Name="Team_PrimaryForUsers" Association="IdentityItem.Team_PrimaryForUsers">
+          <End Role="Team" EntitySet="Teams" />
+          <End Role="PrimaryForUsers" EntitySet="Users" />
+        </AssociationSet>
+        <AssociationSet Name="User_MemberOf" Association="IdentityItem.User_MemberOf">
+          <End Role="User" EntitySet="Users" />
+          <End Role="MemberOf" EntitySet="Teams" />
+        </AssociationSet>
+        <AssociationSet Name="User_UserOwners" Association="IdentityItem.User_UserOwners">
+          <End Role="User" EntitySet="Users" />
+          <End Role="UserOwners" EntitySet="Users" />
+        </AssociationSet>
+        <AssociationSet Name="User_ServiceUserOwners" Association="IdentityItem.User_ServiceUserOwners">
+          <End Role="User" EntitySet="Users" />
+          <End Role="ServiceUserOwners" EntitySet="ServiceUsers" />
+        </AssociationSet>
+        <AssociationSet Name="User_Accounts" Association="IdentityItem.User_Accounts">
+          <End Role="User" EntitySet="Users" />
+          <End Role="Accounts" EntitySet="Accounts" />
+        </AssociationSet>
+        <AssociationSet Name="User_OwnedUsers" Association="IdentityItem.User_OwnedUsers">
+          <End Role="User" EntitySet="Users" />
+          <End Role="OwnedUsers" EntitySet="Users" />
+        </AssociationSet>
+        <AssociationSet Name="User_OwnedServiceUsers" Association="IdentityItem.User_OwnedServiceUsers">
+          <End Role="User" EntitySet="Users" />
+          <End Role="OwnedServiceUsers" EntitySet="ServiceUsers" />
+        </AssociationSet>
+        <AssociationSet Name="User_OwnedTeams" Association="IdentityItem.User_OwnedTeams">
+          <End Role="User" EntitySet="Users" />
+          <End Role="OwnedTeams" EntitySet="Teams" />
+        </AssociationSet>
+        <AssociationSet Name="User_CommunicationMethods" Association="IdentityItem.User_CommunicationMethods">
+          <End Role="User" EntitySet="Users" />
+          <End Role="CommunicationMethods" EntitySet="CommunicationMethods" />
+        </AssociationSet>
+        <AssociationSet Name="User_PrimaryTeam" Association="IdentityItem.User_PrimaryTeam">
+          <End Role="User" EntitySet="Users" />
+          <End Role="PrimaryTeam" EntitySet="Teams" />
+        </AssociationSet>
+        <AssociationSet Name="ServiceUser_MemberOf" Association="IdentityItem.ServiceUser_MemberOf">
+          <End Role="ServiceUser" EntitySet="ServiceUsers" />
+          <End Role="MemberOf" EntitySet="Teams" />
+        </AssociationSet>
+        <AssociationSet Name="ServiceUser_UserOwners" Association="IdentityItem.ServiceUser_UserOwners">
+          <End Role="ServiceUser" EntitySet="ServiceUsers" />
+          <End Role="UserOwners" EntitySet="Users" />
+        </AssociationSet>
+        <AssociationSet Name="ServiceUser_ServiceUserOwners" Association="IdentityItem.ServiceUser_ServiceUserOwners">
+          <End Role="ServiceUser" EntitySet="ServiceUsers" />
+          <End Role="ServiceUserOwners" EntitySet="ServiceUsers" />
+        </AssociationSet>
+        <AssociationSet Name="ServiceUser_Accounts" Association="IdentityItem.ServiceUser_Accounts">
+          <End Role="ServiceUser" EntitySet="ServiceUsers" />
+          <End Role="Accounts" EntitySet="Accounts" />
+        </AssociationSet>
+        <AssociationSet Name="ServiceUser_OwnedUsers" Association="IdentityItem.ServiceUser_OwnedUsers">
+          <End Role="ServiceUser" EntitySet="ServiceUsers" />
+          <End Role="OwnedUsers" EntitySet="Users" />
+        </AssociationSet>
+        <AssociationSet Name="ServiceUser_OwnedServiceUsers" Association="IdentityItem.ServiceUser_OwnedServiceUsers">
+          <End Role="ServiceUser" EntitySet="ServiceUsers" />
+          <End Role="OwnedServiceUsers" EntitySet="ServiceUsers" />
+        </AssociationSet>
+        <AssociationSet Name="ServiceUser_OwnedTeams" Association="IdentityItem.ServiceUser_OwnedTeams">
+          <End Role="ServiceUser" EntitySet="ServiceUsers" />
+          <End Role="OwnedTeams" EntitySet="Teams" />
+        </AssociationSet>
+        <AssociationSet Name="ServiceUser_ServiceRoles" Association="IdentityItem.ServiceUser_ServiceRoles">
+          <End Role="ServiceUser" EntitySet="ServiceUsers" />
+          <End Role="ServiceRoles" EntitySet="ServiceRoles" />
+        </AssociationSet>
+        <AssociationSet Name="ServiceUser_BoundaryHierarchies" Association="IdentityItem.ServiceUser_BoundaryHierarchies">
+          <End Role="ServiceUser" EntitySet="ServiceUsers" />
+          <End Role="BoundaryHierarchies" EntitySet="BoundaryHierarchies" />
+        </AssociationSet>
+        <AssociationSet Name="RoleAssignment_ServiceRole" Association="IdentityItem.RoleAssignment_ServiceRole">
+          <End Role="RoleAssignment" EntitySet="RoleAssignments" />
+          <End Role="ServiceRole" EntitySet="ServiceRoles" />
+        </AssociationSet>
+        <AssociationSet Name="RoleAssignment_Team" Association="IdentityItem.RoleAssignment_Team">
+          <End Role="RoleAssignment" EntitySet="RoleAssignments" />
+          <End Role="Team" EntitySet="Teams" />
+        </AssociationSet>
+        <AssociationSet Name="ServiceRoleDefinition_BoundaryHierarchies" Association="IdentityItem.ServiceRoleDefinition_BoundaryHierarchies">
+          <End Role="ServiceRoleDefinition" EntitySet="ServiceRoles" />
+          <End Role="BoundaryHierarchies" EntitySet="BoundaryHierarchies" />
+        </AssociationSet>
+        <AssociationSet Name="ServiceRoleDefinition_MappedTo" Association="IdentityItem.ServiceRoleDefinition_MappedTo">
+          <End Role="ServiceRoleDefinition" EntitySet="ServiceRoles" />
+          <End Role="MappedTo" EntitySet="BusinessRoles" />
+        </AssociationSet>
+        <AssociationSet Name="ServiceRoleDefinition_RoleAssignments" Association="IdentityItem.ServiceRoleDefinition_RoleAssignments">
+          <End Role="ServiceRoleDefinition" EntitySet="ServiceRoles" />
+          <End Role="RoleAssignments" EntitySet="RoleAssignments" />
+        </AssociationSet>
+        <AssociationSet Name="ServiceRoleDefinition_ServiceUser" Association="IdentityItem.ServiceRoleDefinition_ServiceUser">
+          <End Role="ServiceRoleDefinition" EntitySet="ServiceRoles" />
+          <End Role="ServiceUser" EntitySet="ServiceUsers" />
+        </AssociationSet>
+        <AssociationSet Name="BoundaryHierarchy_ServiceRoles" Association="IdentityItem.BoundaryHierarchy_ServiceRoles">
+          <End Role="BoundaryHierarchy" EntitySet="BoundaryHierarchies" />
+          <End Role="ServiceRoles" EntitySet="ServiceRoles" />
+        </AssociationSet>
+        <AssociationSet Name="BoundaryHierarchy_BusinessRoles" Association="IdentityItem.BoundaryHierarchy_BusinessRoles">
+          <End Role="BoundaryHierarchy" EntitySet="BoundaryHierarchies" />
+          <End Role="BusinessRoles" EntitySet="BusinessRoles" />
+        </AssociationSet>
+        <AssociationSet Name="BoundaryHierarchy_ServiceUser" Association="IdentityItem.BoundaryHierarchy_ServiceUser">
+          <End Role="BoundaryHierarchy" EntitySet="BoundaryHierarchies" />
+          <End Role="ServiceUser" EntitySet="ServiceUsers" />
+        </AssociationSet>
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
