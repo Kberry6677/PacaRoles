@@ -56,7 +56,7 @@ namespace PacaRoles
             workSheet.Columns[1].AutoFit();
             workSheet.Columns[2].AutoFit();
             DateTime excelDate = DateTime.Now;
-            string savePath = @"\\mlsfs\users\v-krberr\PACA_" + excelDate.ToString("MMddyy_HHmm") + ".xlsx";
+            string savePath = @FilePath + excelDate.ToString("MMddyy_HHmm") + ".xlsx";
             workSheet.SaveAs(savePath, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
             excelPaca.Visible = true;
         }
@@ -174,7 +174,7 @@ namespace PacaRoles
         }
         private void Form1_Load(object sender, EventArgs e)
         {
-            var IdentityURL = new Uri("http://identity.api.msdial.com/Directory.svc");
+            var IdentityURL = new Uri("");
             source = new DataReference.IdentityDataSource(IdentityURL)
             {
                 MergeOption = MergeOption.OverwriteChanges,
